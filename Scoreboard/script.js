@@ -75,7 +75,7 @@ const createMatch = (match) => {
     <div class="match">
       <div class="wrapper">
         <button class="lws-delete" onclick="deleteMatch(${id})">
-          <img src="./img/delete.svg" alt="" />
+          <img src="./Img/delete.svg" alt="" />
         </button>
         <h3 class="lws-matchName">${title}</h3>
       </div>
@@ -104,7 +104,7 @@ const render = () => {
 };
 
 // initial render
-render();
+// render();
 
 // subscribe to store updates
 store.subscribe(render);
@@ -144,12 +144,15 @@ function decrementValue(event, id) {
   input.value = "";
 }
 
+// reset
 reset.addEventListener("click", () => {
   store.dispatch({
     type: RESET_ALL,
   });
 });
 
+
+// remove card
 function deleteMatch(id) {
   store.dispatch({
     type: DELETE_MATCH,
