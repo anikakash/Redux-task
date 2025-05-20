@@ -1,11 +1,9 @@
-// MyTable.jsx
 import React, { useState } from "react";
 import { Select, Table, Tag } from "antd";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { removeTask } from "../redux/Actions";
-
 
 // Styled Components
 
