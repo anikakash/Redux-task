@@ -3,25 +3,9 @@ import React, { useState } from "react";
 import { Select, Table, Tag } from "antd";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeTask } from "../redux/Actions";
 
-// Sample Data
-const initialData = [
-  {
-    key: "1",
-    title: "First Task",
-    description: "This is the first task",
-    date: "2025-05-20",
-    status: "active",
-  },
-  {
-    key: "2",
-    title: "Second Task",
-    description: "This is the second task",
-    date: "2025-05-21",
-    status: "inactive",
-  },
-];
 
 // Styled Components
 
@@ -57,6 +41,7 @@ const DeleteIcon = styled(FaTrash)`
 `;
 
 const TodoCrud = () => {
+  const dispatch = useDispatch();
   const allTasks = useSelector((state) => state);
   const [selectedStatus, setSelectedStatus] = useState("all");
 
@@ -65,9 +50,9 @@ const TodoCrud = () => {
     // You can open a modal or form to edit
   };
 
-  const handleDelete = (key) => {
-    const filtered = dataSource.filter((item) => item.key !== key);
-    setDataSource(filtered);
+  const handleDelete = (record) => {
+    console.log(record);
+    dispatch(removeTask(record.id));
   };
 
   const filteredTasks =
@@ -103,7 +88,7 @@ const TodoCrud = () => {
       render: (_, record) => (
         <ActionWrapper>
           <EditIcon onClick={() => handleEdit(record)} />
-          <DeleteIcon onClick={() => handleDelete(record.key)} />
+          <DeleteIcon onClick={() => handleDelete(record)} />
         </ActionWrapper>
       ),
     },
@@ -121,7 +106,7 @@ const TodoCrud = () => {
           { value: "complete", label: "Complete" },
         ]}
       />
-      <Table dataSource={filteredTasks} columns={columns} pagination={false} />;
+      <Table dataSource={filteredTasks} columns={columns} pagination={false} />
     </TableWrapper>
   );
 };
