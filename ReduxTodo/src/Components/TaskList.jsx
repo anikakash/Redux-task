@@ -74,8 +74,8 @@ const TaskList = () => {
         >
           <option value="All">All</option>
           <option value="todo">Todo</option>
-          <option value="progress">Progress</option>
-          <option value="done">Done</option>
+          <option value="progress">In Progress</option>
+          <option value="complete">Done</option>
         </select>
       </div>
 

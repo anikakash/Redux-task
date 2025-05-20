@@ -23,16 +23,6 @@ const taskReducer = (state = initialState, action) => {
     case REMOVE_TASK:
       return state.filter((task) => task.id !== action.payload.id);
 
-    case TOGGLE_TASK:
-      return state.map((task) =>
-        task.id === action.payload
-          ? {
-              ...task,
-              status: task.status === 'todo' ? 'completed' : 'todo',
-            }
-          : task
-      );
-
     default:
       return state;
   }
