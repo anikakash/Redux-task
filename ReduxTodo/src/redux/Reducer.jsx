@@ -1,9 +1,7 @@
-// reducer.jsx
 import {
   ADD_TASK,
   UPDATE_TASK,
   REMOVE_TASK,
-  TOGGLE_TASK,
 } from './Actions';
 
 const initialState = [];
@@ -11,6 +9,7 @@ const initialState = [];
 const taskReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TASK:
+      console.log(action.payload)
       return [...state, action.payload];
 
     case UPDATE_TASK:

@@ -1,6 +1,7 @@
-import FormTest from './Components/FormTest'
+import Todo from './Components/Todo'
 import TaskForm from './Components/TaskForm'
 import TaskList from './Components/TaskList'
+import TodoCrud from './Components/TodoCrud'
 
 function App() {
 
@@ -8,8 +9,8 @@ function App() {
     <>
       {/* <TaskForm/>
       <TaskList/> */}
-      <FormTest/>
-      <TaskList/>
+      <Todo/>
+      <TodoCrud/>
     </>
   )
 }

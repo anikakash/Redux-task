@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, DatePicker, Form, Input, Select, Space } from "antd";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
@@ -33,35 +32,34 @@ const RowWrapper = styled.div`
   }
 `;
 
-const FormTest = () => {
+const Todo = () => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
-  const handleChange = (value) => {
-    console.log("Selected:", value);
+  const handleSubmit = (submission) => {
+    const { date, ...rest } = submission;
+
+    const formattedDate = date.format("D-M-YYYY");
+
+    const taskData = {
+      id: Date.now(),
+      ...rest,
+      date: formattedDate,
+    };
+
+    dispatch(addTask(taskData));
+    // console.log("Submitted:", taskData);
+    form.resetFields();
   };
-
-const handleSubmit = (submission) => {
-  const { date, ...rest } = submission;
-  
-  const formattedDate = date.format("D-M-YYYY");
-
-  const taskData = {
-    id: Date.now(),
-    ...rest,
-    date: formattedDate,
-  };
-
-  dispatch(addTask(taskData));
-  console.log("Submitted:", taskData);
-};
 
   return (
     <FormContainer>
       <StyledForm
+        form={form}
         layout="vertical"
         onFinish={handleSubmit}
         initialValues={{
-          priority: "todo",
+          status: "todo",
         }}
       >
         <RowWrapper>
@@ -76,9 +74,8 @@ const handleSubmit = (submission) => {
           </Form.Item>
         </RowWrapper>
         <RowWrapper>
-          <Form.Item label="Priority" name="priority">
+          <Form.Item label="status" name="status">
             <SelectInput
-              onChange={handleChange}
               options={[
                 { value: "todo", label: "Todo" },
                 { value: "progress", label: "In Progress" },
@@ -97,4 +94,4 @@ const handleSubmit = (submission) => {
   );
 };
 
-export default FormTest;
+export default Todo;
