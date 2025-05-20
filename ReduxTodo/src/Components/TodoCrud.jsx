@@ -26,9 +26,9 @@ const initialData = [
 // Styled Components
 
 const TableWrapper = styled.div`
-    width: 1200px;
-    margin: 1px auto;
-`
+  width: 1200px;
+  margin: 1px auto;
+`;
 
 const SelectInput = styled(Select)`
   width: 20%;
@@ -37,7 +37,7 @@ const SelectInput = styled(Select)`
 
 const ActionWrapper = styled.div`
   display: flex;
-  gap: 12px;
+  justify-content: space-around;
 `;
 
 const EditIcon = styled(FaEdit)`
@@ -58,7 +58,7 @@ const DeleteIcon = styled(FaTrash)`
 
 const TodoCrud = () => {
   const allTasks = useSelector((state) => state);
-  const [dataSource, setDataSource] = useState(initialData);
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const handleEdit = (record) => {
     console.log("Edit clicked:", record);
@@ -69,6 +69,11 @@ const TodoCrud = () => {
     const filtered = dataSource.filter((item) => item.key !== key);
     setDataSource(filtered);
   };
+
+  const filteredTasks =
+    selectedStatus === "all"
+      ? allTasks
+      : allTasks.filter((task) => task.status === selectedStatus);
 
   const columns = [
     {
@@ -90,11 +95,7 @@ const TodoCrud = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
-        <Tag color={status === "active" ? "green" : "red"}>
-          {status.toUpperCase()}
-        </Tag>
-      ),
+      render: (status) => <Tag>{status.toUpperCase()}</Tag>,
     },
     {
       title: "Actions",
@@ -110,14 +111,17 @@ const TodoCrud = () => {
 
   return (
     <TableWrapper>
-        <SelectInput
-              options={[
-                { value: "todo", label: "Todo" },
-                { value: "progress", label: "In Progress" },
-                { value: "complete", label: "Complete" },
-              ]}
-            />
-      <Table dataSource={allTasks} columns={columns} pagination={false}/>;
+      <SelectInput
+        value={selectedStatus}
+        onChange={(value) => setSelectedStatus(value)}
+        options={[
+          { value: "all", label: "All" },
+          { value: "todo", label: "Todo" },
+          { value: "progress", label: "In Progress" },
+          { value: "complete", label: "Complete" },
+        ]}
+      />
+      <Table dataSource={filteredTasks} columns={columns} pagination={false} />;
     </TableWrapper>
   );
 };
