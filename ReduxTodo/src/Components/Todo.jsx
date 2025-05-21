@@ -2,6 +2,7 @@ import { Button, DatePicker, Form, Input, Select, Space } from "antd";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { addTask } from "../redux/Actions";
+import dayjs from "dayjs";
 
 const FormContainer = styled.div`
   width: 800px;
@@ -37,18 +38,17 @@ const Todo = () => {
   const [form] = Form.useForm();
 
   const handleSubmit = (submission) => {
-    const { date, ...rest } = submission;
+    const { dates, ...rest } = submission;
 
-    const formattedDate = date.format("D-M-YYYY");
+    const formattedDate = dayjs(dates).format("YYYY-MM-DD");
 
     const taskData = {
       id: Date.now(),
       ...rest,
       date: formattedDate,
     };
-
+    console.log(taskData)
     dispatch(addTask(taskData));
-    // console.log("Submitted:", taskData);
     form.resetFields();
   };
 
