@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeTask, updateTask } from "../redux/Actions";
 import dayjs from "dayjs";
 import { FiCheck, FiEdit, FiX } from "react-icons/fi";
+const { Search } = Input;
 
 // Styled Components
 
@@ -21,7 +22,7 @@ const SelectInput = styled(Select)`
 
 const ActionWrapper = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
 const EditIcon = styled(FaEdit)`
@@ -46,7 +47,7 @@ const SaveIcon = styled(FiCheck)`
   &:hover {
     color: #008afb;
   }
-`
+`;
 
 const CancleIcon = styled(FiX)`
   color: #ff4d4f;
@@ -54,13 +55,18 @@ const CancleIcon = styled(FiX)`
   &:hover {
     color: #ff7875;
   }
-`
+`;
+
+const SearchBar = styled(Search)`
+  width: 20%;
+`;
 
 const TodoCrud = () => {
   const dispatch = useDispatch();
   const allTasks = useSelector((state) => state);
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [editingKey, setEditingKey] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [form] = Form.useForm();
 
   const isEditing = (record) => record.id === editingKey;
@@ -75,36 +81,41 @@ const TodoCrud = () => {
     setEditingKey(record.id);
   };
 
-  const handleSave = async(record) =>{
+  const handleSave = async (record) => {
     console.log("From save: ", record);
-    try{
+    try {
       const values = await form.validateFields();
       const updateData = {
         ...record,
         ...values,
-        date: values.date ? dayjs(values.date).format("YYYY-MM-DD") : record.date,
-      }
-      console.log(updateData)
-      dispatch(updateTask(updateData.id, updateData))
+        date: values.date
+          ? dayjs(values.date).format("YYYY-MM-DD")
+          : record.date,
+      };
+      console.log(updateData);
+      dispatch(updateTask(updateData.id, updateData));
       setEditingKey("");
-    }catch(err){
+    } catch (err) {
       console.log("Validation Failed: ", err);
     }
-    
-  }
+  };
 
   const handleCancel = () => {
-  setEditingKey("");
-};
+    setEditingKey("");
+  };
   const handleDelete = (record) => {
     console.log(record);
     dispatch(removeTask(record.id));
   };
 
-  const filteredTasks =
-    selectedStatus === "all"
-      ? allTasks
-      : allTasks.filter((task) => task.status === selectedStatus);
+  const filteredTasks = allTasks.filter((task) => {
+    const matchesStatus =
+      selectedStatus === "all" || task.status === selectedStatus;
+    const matchsSearch = task.title
+      .toLowerCase()
+      .includes(searchTerm.toLocaleLowerCase());
+    return matchesStatus && matchsSearch;
+  });
 
   const columns = [
     {
@@ -177,35 +188,42 @@ const TodoCrud = () => {
     {
       title: "Actions",
       key: "actions",
-      render: (_, record) => 
+      render: (_, record) =>
         isEditing(record) ? (
           <ActionWrapper>
-            <SaveIcon onClick={()=>handleSave(record)}/>
-            <CancleIcon onClick={()=>handleCancel()}/>
+            <SaveIcon onClick={() => handleSave(record)} />
+            <CancleIcon onClick={() => handleCancel()} />
           </ActionWrapper>
         ) : (
-          (
-        <ActionWrapper>
-          <EditIcon onClick={() => handleEdit(record)} />
-          <DeleteIcon onClick={() => handleDelete(record)} />
-        </ActionWrapper>
-      )
+          <ActionWrapper>
+            <EditIcon onClick={() => handleEdit(record)} />
+            <DeleteIcon onClick={() => handleDelete(record)} />
+          </ActionWrapper>
         ),
     },
   ];
 
   return (
     <TableWrapper>
-      <SelectInput
-        value={selectedStatus}
-        onChange={(value) => setSelectedStatus(value)}
-        options={[
-          { value: "all", label: "All" },
-          { value: "todo", label: "Todo" },
-          { value: "progress", label: "In Progress" },
-          { value: "complete", label: "Complete" },
-        ]}
-      />
+      <ActionWrapper>
+        <SelectInput
+          value={selectedStatus}
+          onChange={(value) => setSelectedStatus(value)}
+          options={[
+            { value: "all", label: "All" },
+            { value: "todo", label: "Todo" },
+            { value: "progress", label: "In Progress" },
+            { value: "complete", label: "Complete" },
+          ]}
+        />
+        <SearchBar
+          placeholder="Search by title"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onSearch={(value) => setSearchTerm(value)}
+          // allowClear
+        />
+      </ActionWrapper>
       <Form form={form}>
         <Table
           dataSource={filteredTasks}
