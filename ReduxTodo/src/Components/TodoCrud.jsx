@@ -61,6 +61,10 @@ const SearchBar = styled(Search)`
   width: 20%;
 `;
 
+const TagStyle = styled(Tag)`
+  
+`
+
 const TodoCrud = () => {
   const dispatch = useDispatch();
   const allTasks = useSelector((state) => state);
@@ -116,6 +120,17 @@ const TodoCrud = () => {
       .includes(searchTerm.toLocaleLowerCase());
     return matchesStatus && matchsSearch;
   });
+
+  const getStatusColor = (status) => {
+  switch (status) {
+    case "todo":
+      return "red";
+    case "progress":
+      return "orange";
+    case "complete":
+      return "green";
+  }
+};
 
   const columns = [
     {
@@ -182,7 +197,7 @@ const TodoCrud = () => {
             />
           </Form.Item>
         ) : (
-          <Tag>{status.toUpperCase()}</Tag>
+          <Tag color={getStatusColor(status.toLocaleLowerCase())}>{status.toUpperCase()}</Tag>
         ),
     },
     {
